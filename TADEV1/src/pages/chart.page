@@ -1,0 +1,57 @@
+<apex:page >
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+     var chart ;
+    function drawChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['Element', 'Density', { role: 'style' }],
+        ['Copper', 8.94, '#b87333', ],
+        ['Silver', 10.49, 'silver'],
+        ['Gold', 19.30, 'gold'],
+        ['Platinum', 21.45, 'color: #e5e4e2' ]
+      ]);
+
+      var options = {
+        title: "Density of Precious Metals, in g/cm^3",
+        bar: {groupWidth: '95%'},
+        legend: 'none',
+      };
+
+      var chart_div = document.getElementById('chart_div');
+      chart = new google.visualization.ColumnChart(chart_div);
+
+      // Wait for the chart to finish drawing before calling the getImageURI() method.
+        google.visualization.events.addListener(chart, 'ready', function () {
+        chart_div.innerHTML = '<img src="' + chart.getImageURI() + '">';
+        console.log(chart_div.innerHTML);
+      });
+
+    chart.draw(data, options);
+document.getElementById("myImg").src =convertURIToImageData(chart.getImageURI());
+  
+  }
+function convertURIToImageData(URI) {
+  return new Promise(function(resolve, reject) {
+    if (URI == null) return reject();
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        image = new Image();
+    image.addEventListener('load', function() {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+    }, false);
+    image.src = URI;
+  });
+}
+alert()
+  </script>
+<img id="test"/>
+<div id='chart_div'></div>
+
+</apex:page>
